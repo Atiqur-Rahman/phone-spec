@@ -14,9 +14,10 @@
                 <h1 class="text-center text-white mt-4 mb-3">Phone Spec</h1>
             </div>
             <div class="input-group mb-3 w-50 mx-auto">
-                <input type="text" class="form-control" placeholder="Search your favorite phone" aria-label="Search your favorite phone" aria-describedby="search-button" />
-                <button class="btn btn-outline-light" type="button" id="search-button">Search</button>
+                <input id="input-search" type="text" class="form-control" placeholder="Search your favorite phone" aria-label="Search your favorite phone" aria-describedby="search-button" />
+                <button onclick="searchPhone()" class="btn btn-outline-light" type="button" id="search-button">Search</button>
             </div>
+            <div id="search-result" class="row row-cols-1 row-cols-md-3 g-4"></div>
         </section>
 
         <script src="js/api.js"></script>
