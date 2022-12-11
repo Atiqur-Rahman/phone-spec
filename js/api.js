@@ -3,22 +3,39 @@ const searchPhone = () => {
     const searchText = searchField.value;
 
     searchField.value = '';
+    document.getElementById('error-message').textContent = '';
 
-    const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
-    fetch(url)
-        .then((res) => res.json())
-        .then((data) => displaySearchResult(data.data));
+    if (searchText === '') {
+        const errorMessage = document.getElementById('error-message');
+        // errorMessage.textContent = '';
+        const div = document.createElement('div');
+        div.style.textAlign = 'center';
+        div.style.color = 'red';
+        div.style.fontSize = '32px';
+        div.innerHTML = `
+            <p><b>Please write something to search</b></p>
+        `;
+        errorMessage.appendChild(div);
+    } else {
+        const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
+        fetch(url)
+            .then((res) => res.json())
+            .then((data) => displaySearchResult(data.data));
+    }
 };
 
 const displaySearchResult = (phones) => {
     console.log(phones);
     const searchResult = document.getElementById('search-result');
+    searchResult.textContent = '';
     phones.forEach((phone) => {
         const div = document.createElement('div');
         div.classList.add('col');
         div.innerHTML = `
             <div class="card">
-                <img src=${phone.image} class="card-img-top bg-color mx-auto" style="height:430px; width: 350px" alt="..." />
+                <div class="pt-3 pb-3 mx-auto">
+                    <img src=${phone.image} class="card-img-top bg-color " style="height:430px; width: 350px" alt="..." />
+                </div>
                 <div class="card-body bg-color">
                     <h5 class="card-title">${phone.phone_name}</h5>
                     <p class="card-text"><strong>Brand: ${phone.brand}</strong></p>
@@ -41,22 +58,25 @@ const loadPhoneDetail = async (id) => {
 const showPhoneDetail = (details) => {
     console.log(details);
     const phoneDetail = document.getElementById('phone-detail');
+    phoneDetail.textContent = '';
     const div = document.createElement('div');
     // div.classList.add('col');
     div.innerHTML = `
-        <div class="card">
-            <img src=${details.image} class="card-img-top bg-color mx-auto" style="height:430px; width: 350px" alt="..." />
+        <div class="card mt-5" style="width: 600px;">
+            <div class="pt-3 pb-3 mx-auto">
+                <img src=${details.image} class="card-img-top bg-color " style="height:430px; width: 350px" alt="..." />
+            </div>
             <div class="card-body bg-color">
                 <h5 class="card-title">${details.name}</h5>
-                <p>Release Date: ${details.releaseDate}</p>
+                <p>Release Date: ${details.releaseDate ? details.releaseDate : 'Not found'}</p>
                 <p>Brand: ${details.brand}</p>
-                <p class="card-text"><b>Main Feature</b></p>
+                <h6><b>Main Feature</b></h6>
                 <p>Chipset: ${details.mainFeatures.chipSet}</p>
                 <p>Display Size: ${details.mainFeatures.displaySize}</p>
                 <p>Memory: ${details.mainFeatures.memory}</p>
                 <p>Sensor: ${details.mainFeatures.sensors.map((sensor) => ' ' + sensor)}</p>
                 <p>Storage: ${details.mainFeatures.storage}</p>
-                <p><b>Connectivity</b></p>
+                <h6><b>Connectivity</b></h6>
                 <p>Bluetooth: ${details.others.Bluetooth}</p>
                 <p>GPS: ${details.others.GPS}</p>
                 <p>NFC: ${details.others.NFC}</p>
