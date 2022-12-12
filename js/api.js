@@ -1,3 +1,12 @@
+const toggleSpinner = (displaySpinner) => {
+    document.getElementById('spinner').style.display = displaySpinner;
+};
+toggleSpinner('none');
+
+const toggleSearchResult = (displayResult) => {
+    document.getElementById('search-result').style.display = displayResult;
+};
+
 const searchPhone = () => {
     const searchField = document.getElementById('input-search');
     const searchText = searchField.value;
@@ -17,6 +26,10 @@ const searchPhone = () => {
         `;
         errorMessage.appendChild(div);
     } else {
+        document.getElementById('phone-detail').textContent = '';
+        toggleSpinner('block');
+        toggleSearchResult('none');
+
         const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
         fetch(url)
             .then((res) => res.json())
@@ -28,26 +41,45 @@ const displaySearchResult = (phones) => {
     console.log(phones);
     const searchResult = document.getElementById('search-result');
     searchResult.textContent = '';
-    phones.forEach((phone) => {
+
+    if (phones.length === 0) {
+        const errorMessage = document.getElementById('error-message');
         const div = document.createElement('div');
-        div.classList.add('col');
+        div.style.textAlign = 'center';
+        div.style.color = 'red';
+        div.style.fontSize = '32px';
         div.innerHTML = `
-            <div class="card">
-                <div class="pt-3 pb-3 mx-auto">
-                    <img src=${phone.image} class="card-img-top bg-color " style="height:430px; width: 350px" alt="..." />
-                </div>
-                <div class="card-body bg-color">
-                    <h5 class="card-title">${phone.phone_name}</h5>
-                    <p class="card-text"><strong>Brand: ${phone.brand}</strong></p>
-                    <button onclick="loadPhoneDetail('${phone.slug}')" class="bg-primary text-white border border-3 rounded-2">Detail Info</button>
-                </div>
-            </div>
+            <p><b>No results found.</b></p>
         `;
-        searchResult.appendChild(div);
-    });
+        errorMessage.appendChild(div);
+    } else {
+        phones.forEach((phone) => {
+            const div = document.createElement('div');
+            div.classList.add('col');
+            div.innerHTML = `
+                <div class="card">
+                    <div class="pt-3 pb-3 mx-auto">
+                        <img src=${phone.image} class="card-img-top bg-color " style="height:430px; width: 350px" alt="..." />
+                    </div>
+                    <div class="card-body bg-color">
+                        <h5 class="card-title">${phone.phone_name}</h5>
+                        <p class="card-text"><strong>Brand: ${phone.brand}</strong></p>
+                        <button onclick="loadPhoneDetail('${phone.slug}')" class="bg-primary text-white border border-3 rounded-2">Detail Info</button>
+                    </div>
+                </div>
+            `;
+            searchResult.appendChild(div);
+        });
+    }
+    toggleSpinner('none');
+    toggleSearchResult('flex');
 };
 
 const loadPhoneDetail = async (id) => {
+    document.getElementById('phone-detail').textContent = '';
+    toggleSpinner('block');
+    toggleSearchResult('none');
+
     const url = `https://openapi.programming-hero.com/api/phone/${id}`;
     // load data
     const res = await fetch(url);
@@ -58,7 +90,7 @@ const loadPhoneDetail = async (id) => {
 const showPhoneDetail = (details) => {
     console.log(details);
     const phoneDetail = document.getElementById('phone-detail');
-    phoneDetail.textContent = '';
+    // phoneDetail.textContent = '';
     const div = document.createElement('div');
     // div.classList.add('col');
     div.innerHTML = `
@@ -87,4 +119,6 @@ const showPhoneDetail = (details) => {
         </div>
     `;
     phoneDetail.appendChild(div);
+    toggleSpinner('none');
+    toggleSearchResult('flex');
 };
