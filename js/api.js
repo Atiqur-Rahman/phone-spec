@@ -1,12 +1,15 @@
+// toggle spinner function
 const toggleSpinner = (displaySpinner) => {
     document.getElementById('spinner').style.display = displaySpinner;
 };
 toggleSpinner('none');
 
+// toggle displaySearchResult function
 const toggleSearchResult = (displayResult) => {
     document.getElementById('search-result').style.display = displayResult;
 };
 
+// search box and load data
 const searchPhone = () => {
     const searchField = document.getElementById('input-search');
     const searchText = searchField.value;
@@ -31,12 +34,14 @@ const searchPhone = () => {
         toggleSearchResult('none');
 
         const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
+        // load data
         fetch(url)
             .then((res) => res.json())
             .then((data) => displaySearchResult(data.data));
     }
 };
 
+// display the searched data
 const displaySearchResult = (phones) => {
     console.log(phones);
     const searchResult = document.getElementById('search-result');
@@ -53,7 +58,7 @@ const displaySearchResult = (phones) => {
         `;
         errorMessage.appendChild(div);
     } else {
-        phones.forEach((phone) => {
+        /* phones.forEach((phone) => {
             const div = document.createElement('div');
             div.classList.add('col');
             div.innerHTML = `
@@ -69,12 +74,30 @@ const displaySearchResult = (phones) => {
                 </div>
             `;
             searchResult.appendChild(div);
-        });
+        }); */
+        for (let phone = 0; phone < (phones.length < 20 ? phones.length : 20); phone++) {
+            const div = document.createElement('div');
+            div.classList.add('col');
+            div.innerHTML = `
+                <div class="card">
+                    <div class="pt-3 pb-3 mx-auto">
+                        <img src=${phones[phone].image} class="card-img-top bg-color " style="height:430px; width: 350px" alt="..." />
+                    </div>
+                    <div class="card-body bg-color">
+                        <h5 class="card-title">${phones[phone].phone_name}</h5>
+                        <p class="card-text"><strong>Brand: ${phones[phone].brand}</strong></p>
+                        <button onclick="loadPhoneDetail('${phones[phone].slug}')" class="bg-primary text-white border border-3 rounded-2">Detail Info</button>
+                    </div>
+                </div>
+            `;
+            searchResult.appendChild(div);
+        }
     }
     toggleSpinner('none');
     toggleSearchResult('flex');
 };
 
+// load detail data
 const loadPhoneDetail = async (id) => {
     document.getElementById('phone-detail').textContent = '';
     toggleSpinner('block');
@@ -87,6 +110,7 @@ const loadPhoneDetail = async (id) => {
     showPhoneDetail(data.data);
 };
 
+// display detail data
 const showPhoneDetail = (details) => {
     console.log(details);
     const phoneDetail = document.getElementById('phone-detail');
