@@ -78,10 +78,11 @@ const displaySearchResult = (phones) => {
         for (let phone = 0; phone < (phones.length < 20 ? phones.length : 20); phone++) {
             const div = document.createElement('div');
             div.classList.add('col');
+            console.log(phone);
             div.innerHTML = `
                 <div class="card">
                     <div class="pt-3 pb-3 mx-auto">
-                        <img src=${phones[phone].image} class="card-img-top bg-color " style="height:430px; width: 350px" alt="..." />
+                        <img src=${phones[phone].image} class="card-img-top bg-color " alt="..." />
                     </div>
                     <div class="card-body bg-color">
                         <h5 class="card-title">${phones[phone].phone_name}</h5>
@@ -118,9 +119,9 @@ const showPhoneDetail = (details) => {
     const div = document.createElement('div');
     // div.classList.add('col');
     div.innerHTML = `
-        <div class="card mt-5" style="width: 600px;">
+        <div class="card mt-5">
             <div class="pt-3 pb-3 mx-auto">
-                <img src=${details.image} class="card-img-top bg-color " style="height:430px; width: 350px" alt="..." />
+                <img src=${details.image} class="card-img-top bg-color" alt="..." />
             </div>
             <div class="card-body bg-color">
                 <h5 class="card-title">${details.name}</h5>
@@ -133,12 +134,12 @@ const showPhoneDetail = (details) => {
                 <p>Sensor: ${details.mainFeatures.sensors.map((sensor) => ' ' + sensor)}</p>
                 <p>Storage: ${details.mainFeatures.storage}</p>
                 <h6><b>Connectivity</b></h6>
-                <p>Bluetooth: ${details.others.Bluetooth}</p>
-                <p>GPS: ${details.others.GPS}</p>
-                <p>NFC: ${details.others.NFC}</p>
-                <p>Radio: ${details.others.Radio}</p>
-                <p>USB: ${details.others.USB}</p>
-                <p>WLAN: ${details.others.WLAN}</p>
+                <p>Bluetooth: ${details.others?.Bluetooth ? details.others.Bluetooth : 'Not found'}</p>
+                <p>GPS: ${details.others?.GPS ? details.others.GPS : 'Not found'}</p>
+                <p>NFC: ${details.others?.NFC ? details.others.NFC : 'Not found'}</p>
+                <p>Radio: ${details.others?.Radio ? details.others.Radio : 'Not found'}</p>
+                <p>USB: ${details.others?.USB ? details.others.USB : 'Not found'}</p>
+                <p>WLAN: ${details.others?.WLAN ? details.others.WLAN : 'Not found'}</p>
             </div>
         </div>
     `;
